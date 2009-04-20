@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for f in java_libs/*.jar; do
+    CLASSPATH=$CLASSPATH:$f
+done
+
+if [ -z "$1" ]; then
+   java -cp $CLASSPATH jline.ConsoleRunner clojure.lang.Repl
+else
+    java -cp $CLASSPATH clojure.lang.Script $1
+fi
