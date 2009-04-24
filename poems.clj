@@ -1,11 +1,8 @@
-(ns poems
-  (:import (java.net URL)
-	   (java.io BufferedReader InputStreamReader)))
+(ns poems)
 
-;(def parsed (clojure.xml/parse ""))
 (def base-url "http://en.wikisource.org")
 (def starting-url "http://en.wikisource.org/wiki/Category:Poems")
-(def poem-link-regex #"/wiki/[A-Za-z0-1_()]+$")
+(def poem-link-regex #"/wiki/[A-Za-z0-1_():]+$")
 
 (defn isa-node?
   "Returns true if 'node' is a node, nil otherwise"
@@ -71,21 +68,27 @@ Also just returns the deepest node satifying the predicate"
   ([node]
       (filter-elements isa-poem-link? (first (filter-elements #(= (:id (:attrs %)) "mw-pages") node))))
   ([]
-     (all-poem-nodes (clojure.xml/parse starting-url))))
+     (all-poem-links (clojure.xml/parse starting-url))))
 
 (defn next-link-url
   [node]
   (:href (:attrs (first (filter-elements isa-next-link? node)))))
 
-(defn example-node []
-  (let [root (clojure.xml/parse starting-url)]
-    (get-elements-by-tag root :a)))
+(defn next-node
+  "Returns the parsed node linked to by the 'next 200' link in 'node'"
+  [node]
+  (let [next-url (next-link-url node)]
+    (if next-url
+      (clojure.xml/parse (.concat base-url next-url)))))
 
-;; DOESNT WORK
-(def all-poems
-     (fn [n]
-       (loop
-	   [node n poem-links nil]
-	 (if (nil? (next-link-url node))
-	   (all-poem-links node)
-	   (recur (clojure.xml/parse (.concat base-url (next-link-url node))) (concat poem-links (all-poem-links node)))))))
+(defn poem-node-title
+  [node]
+  (:title (:attrs node)))
+
+(defn all-poems
+  [starting-node]
+  (loop
+      [node starting-node poem-links nil]
+    (if (nil? (next-link-url node))
+      (concat poem-links (all-poem-links node))
+      (recur (next-node node) (concat poem-links (all-poem-links node))))))
