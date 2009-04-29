@@ -1,0 +1,12 @@
+* Description
+
+Application that serves and displays poems on an iPhone every day
+
+* Tasks
+** DONE organize poems.clj
+** TODO write unit tests for poems.clj functions
+** DONE get seq-utils library working
+** TODO write function to randomly pick a poem
+** TODO make variable to hold all poem
+** TODO write function to grab all poems and put them in a global variable
+   
