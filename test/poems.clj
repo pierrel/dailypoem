@@ -7,4 +7,6 @@
 
 
 (deftest test-get-elements-by-tag
-  (is (not-empty (DailyPoem.app.poems/get-elements-by-tag (clojure.xml/parse test-html) :a))))
+  (let [html-node (clojure.xml/parse test-html)]
+    (is (not-empty (DailyPoem.app.poems/get-elements-by-tag html-node :a)))
+    (is (= (DailyPoem.app.poems/get-elements-by-tag html-node :table) nil))))
