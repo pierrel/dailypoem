@@ -3,8 +3,7 @@
 	    (clojure.contrib test-is))
   (:use (app.poems)))
 
-(def test-html
-     "<html><body><a title=\"poem\" href=\"/wiki/This_Is_A_Poem\">This is a Poem</a></body></html>")
+(def test-html "test/test-html.html")
 
 
 (deftest test-get-elements-by-tag

@@ -1,6 +1,7 @@
 (ns DailyPoem.app.poems
-  (:use (clojure.contrib seq-utils)
-	(clojure xml)))
+  (:require (clojure.contrib seq-utils)
+	    (clojure xml)
+	    (clojure.contrib test-is)))
 
 
 ; Static variables
@@ -11,7 +12,6 @@
 
 
 ; Boolean functions
-
 (defn isa-node?
   "Returns true if 'node' is a node, nil otherwise"
   [node]
