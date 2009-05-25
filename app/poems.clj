@@ -1,7 +1,7 @@
 (ns DailyPoem.app.poems
-  (:require (clojure.contrib seq-utils)
-	    (clojure xml)
-	    (clojure.contrib test-is)))
+  (:use (clojure.contrib seq-utils)
+	(clojure xml)
+	(clojure.contrib test-is)))
 
 
 ; Static variables
@@ -13,7 +13,7 @@
 
 ; Boolean functions
 (defn isa-node?
-  "Returns true if 'node' is a node, nil otherwise"
+  "Returns true if 'node' is an xml node (like the kind returned by xml/parse), nil otherwise"
   [node]
   (and (= (type node) clojure.lang.PersistentStructMap)
        (reduce 'and (map #(contains? node %)

@@ -1,12 +1,15 @@
 (ns DailyPoem.test.poems
-  (:require (clojure xml)
-	    (clojure.contrib test-is))
-  (:use (app.poems)))
+  (:use (app.poems)
+	(clojure xml)
+	(clojure.contrib test-is)))
 
-(def test-html "test/test-html.html")
+(def test-html-file "test/test-html.html")
 
+(def test-node (parse test-html-file))
 
 (deftest test-get-elements-by-tag
-  (let [html-node (clojure.xml/parse test-html)]
-    (is (not-empty (DailyPoem.app.poems/get-elements-by-tag html-node :a)))
-    (is (= (DailyPoem.app.poems/get-elements-by-tag html-node :table) nil))))
+  (is (not-empty (DailyPoem.app.poems/get-elements-by-tag test-node :a)))
+  (is (= (DailyPoem.app.poems/get-elements-by-tag test-node :table) nil)))
+
+(deftest test-isa-node?
+  (is (DailyPoem.app.poems/isa-node? test-node)))

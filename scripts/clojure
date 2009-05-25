@@ -3,7 +3,7 @@
 for f in java_libs/*.jar; do
     CLASSPATH=$CLASSPATH:$f
 done
-CLASSPATH=.:app:$CLASSPATH
+CLASSPATH=.:lib:test:app:$CLASSPATH
 
 if [ -z "$1" ]; then
    java -cp $CLASSPATH jline.ConsoleRunner clojure.lang.Repl
