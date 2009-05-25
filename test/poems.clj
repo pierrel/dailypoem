@@ -12,4 +12,5 @@
   (is (= (DailyPoem.app.poems/get-elements-by-tag test-node :table) nil)))
 
 (deftest test-isa-node?
-  (is (DailyPoem.app.poems/isa-node? test-node)))
+  (is (DailyPoem.app.poems/isa-node? test-node))
+  (is (not (DailyPoem.app.poems/isa-node? {:html "something"}))))
