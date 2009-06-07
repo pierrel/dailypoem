@@ -10,6 +10,10 @@
 (def starting-url "http://en.wikisource.org/wiki/Category:Poems")
 (def poem-link-regex #"/wiki/[A-Za-z0-1_():]+$")
 
+(def *poems* (ref nil))
+
+(defstruct poem :title :author :text)
+
 
 ; Boolean functions
 (defn isa-node?
@@ -80,10 +84,27 @@ Also just returns the deepest node satifying the predicate"
     (if next-url
       (parse (.concat base-url next-url)))))
 
+(defn poem-node-href
+  "Returns the link to the poem"
+  [node]
+  (:href (:attrs node)))
+
 (defn poem-node-title
   "Returns the title attribute of the given node"
   [node]
   (:title (:attrs node)))
+
+(defn poem-node-author
+  "Returns the author of the given poem link node"
+  [poem-node]
+  (let [poem-page-node (parse (str base-url (poem-node-href poem-node)))]
+    (first (:content (first (filter-elements #(= "header_author_text" (:id (:attrs %))) poem-page-node))))))
+
+(defn poem-node-body
+  "Returns the body of the given poem link node as a string of straight xml"
+  [poem-node]
+  (let [poem-page-node (parse (str base-url (poem-node-href poem-node)))]
+    (emit (first (filter-elements #(= "poem" (:class (:attrs %))) poem-page-node)))))
 
 (defn all-poems
   [starting-node]
@@ -92,3 +113,32 @@ Also just returns the deepest node satifying the predicate"
     (if (nil? (next-link-url node))
       (concat poem-links (all-poem-links node))
       (recur (next-node node) (concat poem-links (all-poem-links node))))))
+
+; *poems* variable manipulation
+
+(defn random-poem-node
+  "selects a poem at random from the *poems* variable"
+  []
+  (if *poems*
+    (poem-node-to-poem-struct (rand-elt *poems*))
+    (poem-node-to-poem-struct (rand-elt (refresh-poems)))))
+
+(defn refresh-poems
+  "refreshes the *poems* variable to all poems in wikisource and returns list of all poems in wikisource"
+  []
+;;   (dosync
+;;    (alter *poems* #(all-poem-links))))
+  (= *poems* (all-poem-links))
+
+
+(defn poem-node-to-poem-struct
+  "Given a poem link node returns a poem struct
+DOES NOT WORK, depends on 'poem-node-body'"
+  [poem-link-node]
+  
+  (let [node-body *out*]
+    (poem-node-body poem-link-node) ; writes body to *out*, which is now node-body
+    (struct-map poem 
+      :title (poem-node-title poem-link-node)
+      :author (poem-node-author poem-link-node)
+      :text  node-body)))
