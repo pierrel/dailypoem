@@ -9,15 +9,15 @@
 (def test-node (parse test-html-file))
 
 (deftest test-get-elements-by-tag
-  (is (not-empty (dailypoem.poems/get-elements-by-tag test-node :a)))
-  (is (= (dailypoem.poems/get-elements-by-tag test-node :table) nil)))
+  (is (not-empty (get-elements-by-tag test-node :a)))
+  (is (= (get-elements-by-tag test-node :table) nil)))
 
 (deftest test-isa-node?
-  (is (dailypoem.poems/isa-node? test-node))
-  (is (not (dailypoem.poems/isa-node? {:html "something"}))))
+  (is (isa-node? test-node))
+  (is (not (isa-node? {:html "something"}))))
 
 (deftest test-isa-poem-link?
-  (let [a-tags (dailypoem.poems/get-elements-by-tag test-node :a)]
-    (is (dailypoem.poems/isa-poem-link? (first a-tags)))
-    (is (not (dailypoem.poems/isa-poem-link? (second a-tags))))))
+  (let [a-tags (get-elements-by-tag test-node :a)]
+    (is (isa-poem-link? (first a-tags)))
+    (is (not (isa-poem-link? (second a-tags))))))
 
