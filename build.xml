@@ -1,0 +1,23 @@
+<project name="dailypoem-clj" basedir="." default="compile">
+
+  <property name="build.dir" location="war/WEB-INF/classses" />
+  <property name="deps.dir" location="war/lib" />
+  <property name="source.dir" location="src" />
+
+  <path id="classpath">
+    <pathelement path="${classes.dir}" />
+    <fileset dir="${deps.dir}">
+      <include name="**/*.jar" />
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+
+  <target name="compile">
+    <java classname="clojure.lang.Compile" classpathref="classpath" failonerror="true">
+      <classpath path="${src.dir}" />
+      <sysproperty key="clojure.compile.path" value="${classes.dir}" />
+      <arg value="dailypoem.servlet" />
+    </java>
+  </target>
+</project>
