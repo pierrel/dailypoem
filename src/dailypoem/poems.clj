@@ -64,11 +64,11 @@ Also just returns the deepest node satifying the predicate"
 	(if (predicate root-node)
 	  root-node)))))
 
-(defn all-poem-links
+(defn all-poem-nodes
   ([node]
       (filter-elements isa-poem-link? (first (filter-elements #(= (:id (:attrs %)) "mw-pages") node))))
   ([]
-     (all-poem-links (parse starting-url))))
+     (all-poem-nodes (parse starting-url))))
 
 
 ; Node/page traversal functions
@@ -111,8 +111,8 @@ Also just returns the deepest node satifying the predicate"
   (loop
       [node starting-node poem-links nil]
     (if (nil? (next-link-url node))
-      (concat poem-links (all-poem-links node))
-      (recur (next-node node) (concat poem-links (all-poem-links node))))))
+      (concat poem-links (all-poem-nodes node))
+      (recur (next-node node) (concat poem-links (all-poem-nodes node))))))
 
 ; *poems* variable manipulation
 
@@ -131,8 +131,8 @@ DOES NOT WORK, depends on 'poem-node-body'"
   "refreshes the *poems* variable to all poems in wikisource and returns list of all poems in wikisource"
   []
 ;;   (dosync
-;;    (alter *poems* #(all-poem-links))))
-  (= *poems* (all-poem-links)))
+;;    (alter *poems* #(all-poem-nodes))))
+  (= *poems* (all-poem-nodes)))
 
 (defn random-poem-node
   "selects a poem at random from the *poems* variable"
