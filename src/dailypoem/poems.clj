@@ -1,6 +1,6 @@
 (ns dailypoem.poems
-  (:use (clojure.contrib seq-utils))
-  (:require (wikisource)))
+  (:use (clojure.contrib seq-utils)
+	(dailypoem node-utils)))
 
 
 (def *poems* (ref nil))
@@ -10,7 +10,7 @@
   []
 ;;   (dosync
 ;;    (alter *poems* #(all-poem-nodes))))
-  (= *poems* (wikisource/all-poems)))
+  (= *poems* (all-poems)))
 
 (defn random-poem-node
   "selects a poem at random from the *poems* variable"
