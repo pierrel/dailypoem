@@ -1,2 +1,3 @@
 #!/bin/bash
 
+scripts/clojure src/test/tester.clj
